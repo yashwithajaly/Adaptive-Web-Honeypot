@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Status</title>
+<meta http-equiv="refresh" content="5">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+:root{
+  --bg:#0b1118;
+  --panel:rgba(255,255,255,.05);
+  --stroke:rgba(255,255,255,.08);
+  --accent:#00e5ff;
+  --muted:#6f8aa3;
+  --ok:#22c55e;
+  --warn:#ffb020;
+  --danger:#ff4d4d;
+}
+
+body{
+  background:var(--bg);
+  color:#eaf2ff;
+}
+
+/* Top */
+.topbar{
+  padding:16px 24px;
+  background:rgba(15,27,42,.92);
+  border-bottom:1px solid var(--stroke);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.topbar a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:700;
+}
+.live{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:rgba(0,229,255,.10);
+  border:1px solid rgba(0,229,255,.22);
+  font-size:13px;
+  color:#d9fbff;
+}
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--ok);
+  box-shadow:0 0 12px var(--ok);
+  animation:pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1);opacity:1;}
+  50%{transform:scale(1.6);opacity:.55;}
+}
+.meta{
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* Content */
+.wrap{padding:22px;}
+h2{color:var(--accent);margin-bottom:14px;}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+  margin-bottom:14px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--stroke);
+  border-radius:12px;
+  padding:16px;
+  box-shadow:0 0 16px rgba(0,0,0,.35);
+}
+
+.card h3{
+  font-size:14px;
+  margin-bottom:10px;
+  color:#7cafff;
+}
+
+.big{
+  font-size:28px;
+  font-weight:800;
+}
+
+/* Status lines */
+.status-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.status-line:last-child{border-bottom:none;}
+
+.pill{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  border:1px solid var(--stroke);
+}
+.pill.ok{background:rgba(34,197,94,.15);color:#7CFFB0;border-color:rgba(34,197,94,.35);}
+.pill.warn{background:rgba(255,176,32,.15);color:#ffd28a;border-color:rgba(255,176,32,.35);}
+.pill.danger{background:rgba(255,77,77,.15);color:#ffb0b0;border-color:rgba(255,77,77,.35);}
+
+/* Progress */
+.bar{
+  margin-top:10px;
+  height:10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--stroke);
+  overflow:hidden;
+}
+.fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg, rgba(34,197,94,.9), rgba(255,176,32,.9), rgba(255,77,77,.9));
+  transition:width .6s ease;
+}
+
+/* Footer */
+.footer{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:12px;
+  text-align:center;
+}
+
+@media (max-width: 980px){
+  .grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <a href="{% url 'attack_logs' %}">Attack Logs</a>
+  <a href="{% url 'attacker_profiles' %}">Attacker Profiles</a>
+  <a href="{% url 'system_status' %}">System Status</a>
+    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+  <div class="live"><span class="dot"></span> LIVE STATUS <span class="meta">Auto refresh: 5s</span></div>
+  <div class="meta">Last updated: <span id="lastUpdated">--:--:--</span></div>
+</div>
+
+<div class="wrap">
+  <h2>System Status</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Total Requests (All Time)</h3>
+      <div class="big" id="total">{{ total_requests }}</div>
+      <div class="bar"><div class="fill" id="fillTotal"></div></div>
+    </div>
+
+    <div class="card">
+      <h3>Active Attacker Profiles</h3>
+      <div class="big" id="attackers">{{ active_attackers }}</div>
+      <div class="bar"><div class="fill" id="fillAttackers"></div></div>
+    </div>
+
+    <div class="card">
+      <h3>Threat Level</h3>
+      <div class="big" id="threatText">--</div>
+      <div class="bar"><div class="fill" id="fillThreat"></div></div>
+    </div>
+  </div>
+
+  <h2>Performance Metrics</h2>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Average Response Time</h3>
+      <div class="big">{{ avg_response_time }} ms</div>
+      <div class="meta">Min: {{ min_response_time }}ms | Max: {{ max_response_time }}ms</div>
+    </div>
+
+    <div class="card">
+      <h3>Response Time Percentiles</h3>
+      <div class="big">{{ p50_response_time }} ms</div>
+      <div class="meta">P50: {{ p50_response_time }}ms | P95: {{ p95_response_time }}ms | P99: {{ p99_response_time }}ms</div>
+    </div>
+
+    <div class="card">
+      <h3>Request Rate</h3>
+      <div class="big">{{ requests_per_minute }}</div>
+      <div class="meta">Requests per minute (avg)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>HTTP Status Code Distribution</h3>
+    <div class="status-line">
+      {% for status in status_codes %}
+      <div>{{ status.status_code }}: {{ status.count }} requests</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Service Health</h3>
+
+    <div class="status-line">
+      <div>Honeypot Collector</div>
+      <div class="pill ok" id="svcCollector">RUNNING</div>
+    </div>
+
+    <div class="status-line">
+      <div>Database</div>
+      <div class="pill ok" id="svcDb">CONNECTED</div>
+    </div>
+
+    <div class="status-line">
+      <div>Alert Engine</div>
+      <div class="pill warn" id="svcAlert">MONITORING</div>
+    </div>
+
+    <div class="status-line">
+      <div>Deception Layer</div>
+      <div class="pill ok" id="svcDecoy">ACTIVE</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    AI-Driven Honeypot • Live Health Checks • Deception Defense System
+  </div>
+</div>
+
+<script>
+  // time label
+  const pad = (n)=> String(n).padStart(2,'0');
+  const now = new Date();
+  document.getElementById("lastUpdated").textContent =
+    `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
+  // numbers from backend
+  const total = Number("{{ total_requests|default:0 }}") || 0;
+  const attackers = Number("{{ active_attackers|default:0 }}") || 0;
+
+  // simple threat score (tune anytime)
+  const score = Math.min(100, Math.round((total/50)*35 + (attackers/5)*65));
+
+  let label = "LOW";
+  if(score >= 70) label = "CRITICAL";
+  else if(score >= 40) label = "ELEVATED";
+
+  document.getElementById("threatText").textContent = `${label} (${score}%)`;
+
+  // fills
+  document.getElementById("fillTotal").style.width = Math.min(100, (total/200)*100) + "%";
+  document.getElementById("fillAttackers").style.width = Math.min(100, (attackers/20)*100) + "%";
+  document.getElementById("fillThreat").style.width = score + "%";
+
+  // optional: change pill states based on threat
+  if(label === "CRITICAL"){
+    document.getElementById("svcAlert").className = "pill danger";
+    document.getElementById("svcAlert").textContent = "ALERTING";
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3 @@
+pip install django==4.2.17
+pip install pymysql==1.1.0
+pip install openai==2.17.0

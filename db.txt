@@ -1,0 +1,66 @@
+DROP DATABASE IF EXISTS honeypot_db;
+CREATE DATABASE honeypot_db;
+USE honeypot_db;
+
+CREATE TABLE attack_session (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  ip_address VARCHAR(64),
+  user_agent TEXT,
+  start_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_seen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  request_count INT DEFAULT 0
+);
+
+CREATE TABLE request_event (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  session_id BIGINT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ip_address VARCHAR(64),
+  method VARCHAR(10),
+  path TEXT,
+  query_string TEXT,
+  headers_text LONGTEXT,
+  payload_text LONGTEXT,
+  user_agent TEXT,
+  referer TEXT,
+  status_code INT,
+  duration_ms INT
+);
+
+CREATE INDEX idx_session_id ON request_event(session_id);
+CREATE INDEX idx_ip_created ON request_event(ip_address(32), created_at);
+
+CREATE TABLE attack_label (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  request_id BIGINT,
+  attack_type VARCHAR(50),
+  intent_summary TEXT,
+  confidence FLOAT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE attack_label 
+ADD UNIQUE KEY uniq_request (request_id);
+
+CREATE TABLE attacker_profile (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  ip_address VARCHAR(64),
+  bot_or_human VARCHAR(20),
+  skill_level VARCHAR(20),
+  behavior_notes TEXT,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE attacker_profile 
+ADD UNIQUE KEY uniq_ip (ip_address);
+
+
+CREATE TABLE prompt_attack_log (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  ip_address VARCHAR(64),
+  prompt_text LONGTEXT,
+  detected_type VARCHAR(100),
+  confidence FLOAT,
+  response_text LONGTEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);

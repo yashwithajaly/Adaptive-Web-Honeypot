@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+</head>
+<body>
+  <h2>Dashboard</h2>
+  <p>Welcome back. Latest system activity is available below.</p>
+
+  <nav>
+    <a href="{% url 'home' %}">Home</a> 
+    <a href="{% url 'fake_admin_login' %}">Admin Area</a> 
+    <a href="{% url 'bait_env' %}">System Config</a>
+  </nav>
+
+  <hr>
+
+  <h3>Recent Reports</h3>
+  <ul>
+    <li>Monthly Revenue Report (Restricted)</li>
+    <li>User Access Audit (Restricted)</li>
+    <li>Backup Snapshot (Restricted)</li>
+  </ul>
+
+  <p style="color:#777;">No real data is shown here (honeypot demo).</p>
+</body>
+</html>

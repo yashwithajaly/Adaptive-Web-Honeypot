@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attack Logs</title>
+<style>
+  body{margin:0;font-family:Segoe UI,sans-serif;background:#0b1118;color:#eaf2ff;}
+  .topbar{padding:16px 24px;background:rgba(15,27,42,.92);border-bottom:1px solid rgba(255,255,255,.08);}
+  .topbar a{color:#00e5ff;text-decoration:none;font-weight:700;}
+  .wrap{padding:22px;}
+  .card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;}
+  h2{margin:0 0 14px;color:#00e5ff;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:10px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;}
+  th{color:#00e5ff;background:rgba(16,27,42,.85);}
+  tr:hover{background:rgba(16,31,51,.6);}
+  .mono{font-family:ui-monospace,Consolas,monospace;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+  <a href="{% url 'attack_logs' %}">Attack Logs</a>
+  <a href="{% url 'attacker_profiles' %}">Attacker Profiles</a>
+  <a href="{% url 'system_status' %}">System Status</a>
+    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+  </div>
+
+  <div class="wrap">
+    <h2>Attack Logs</h2>
+    <div class="card">
+      <table>
+        <tr>
+          <th>Time</th>
+          <th>IP</th>
+          <th>Path</th>
+          <th>Method</th>
+          <th>Attack Type</th>
+        </tr>
+        {% for r in logs %}
+        <tr>
+          <td class="mono">{{ r.created_at }}</td>
+          <td class="mono">{{ r.ip_address }}</td>
+          <td class="mono">{{ r.path }}</td>
+          <td>{{ r.method }}</td>
+          <td>{{ r.attack_type }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" style="color:#6f8aa3;">No logs yet.</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</body>
+</html>

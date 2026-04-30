@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure Data Portal</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body{
+      height:100vh;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.85)),
+                  url("{% static 'images/bg.jpg' %}") no-repeat center center/cover;
+      color:#fff;
+    }
+
+    /* ===== TOP NAV BAR ===== */
+    .topbar{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:20px 40px;
+      background:rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+
+    .logo{
+      font-size:24px;
+      letter-spacing:1px;
+      color:#00e5ff;
+      text-shadow:0 0 10px #00e5ff;
+      font-weight:600;
+    }
+
+    nav{
+      display:flex;
+      gap:18px;
+    }
+
+    nav a{
+      text-decoration:none;
+      padding:10px 18px;
+      border-radius:6px;
+      font-weight:600;
+      font-size:14px;
+      transition:0.3s ease;
+      border:1px solid rgba(255,255,255,0.25);
+      color:#fff;
+      background: rgba(0, 229, 255, 0.15);
+    }
+
+    nav a:hover{
+      background:#00e5ff;
+      color:#000;
+      transform:translateY(-2px);
+      box-shadow:0 0 15px #00e5ff;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo">Honey Pot</div>
+
+    <nav>
+      <a href="{% url 'fake_login' %}">User Login</a>
+      <a href="{% url 'fake_admin_login' %}">Admin Login</a>
+      <a href="{% url 'prompt_vulnerability_module' %}">AI Banking Assistant</a>
+    </nav>
+  </div>
+
+</body>
+</html>
+

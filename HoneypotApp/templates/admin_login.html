@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Control Panel</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: linear-gradient(rgba(10,0,0,0.85), rgba(0,0,0,0.9)),
+                  url("{% static 'images/bg.jpg' %}") no-repeat center center/cover;
+      color:#fff;
+    }
+
+    .admin-box{
+      width:360px;
+      padding:40px;
+      border-radius:12px;
+      background: rgba(255,0,0,0.05);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(255,0,0,0.25);
+      box-shadow:0 0 35px rgba(255,0,0,0.2);
+    }
+
+    h2{
+      text-align:center;
+      margin-bottom:25px;
+      color:#ff4d4d;
+      text-shadow:0 0 10px #ff4d4d;
+      letter-spacing:1px;
+    }
+
+    label{
+      font-size:14px;
+      color:#ccc;
+    }
+
+    input{
+      width:100%;
+      padding:10px;
+      margin-top:6px;
+      margin-bottom:18px;
+      border-radius:6px;
+      border:1px solid rgba(255,255,255,0.25);
+      background: rgba(0,0,0,0.5);
+      color:#fff;
+      outline:none;
+    }
+
+    input:focus{
+      border-color:#ff4d4d;
+      box-shadow:0 0 8px #ff4d4d;
+    }
+
+    button{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:6px;
+      background:#ff4d4d;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.3s ease;
+    }
+
+    button:hover{
+      background:#e60000;
+      box-shadow:0 0 15px #ff4d4d;
+    }
+
+    .message{
+      margin-top:15px;
+      text-align:center;
+      color:#ff4d4d;
+      font-size:14px;
+    }
+
+    .back{
+      display:block;
+      text-align:center;
+      margin-top:20px;
+      text-decoration:none;
+      color:#aaa;
+      font-size:13px;
+    }
+
+    .back:hover{
+      color:#ff4d4d;
+    }
+
+    .warning{
+      text-align:center;
+      font-size:12px;
+      margin-bottom:15px;
+      color:#ff8080;
+      opacity:0.8;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="admin-box">
+    <h2>Admin Control Panel</h2>
+    <div class="warning">⚠ Restricted System Access</div>
+
+    <form method="post">
+      {% csrf_token %}
+      <label>Admin Username</label>
+      <input type="text" name="admin_user" required>
+
+      <label>Password</label>
+      <input type="password" name="admin_pass" required>
+
+      <button type="submit">Sign In</button>
+    </form>
+
+    <div class="message">{{ message }}</div>
+
+    <a href="{% url 'home' %}" class="back">← Back to Home</a>
+  </div>
+
+</body>
+</html>

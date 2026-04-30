@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel</title>
+</head>
+<body>
+  <h2>Admin Panel</h2>
+  <p>Administrative actions and system settings.</p>
+
+  <nav>
+    <a href="{% url 'fake_dashboard' %}">User Dashboard</a> |
+    <a href="{% url 'bait_phpmyadmin' %}">DB Console</a> |
+    <a href="{% url 'bait_backup' %}">Download Backup</a>
+  </nav>
+
+  <hr>
+
+  <h3>Admin Actions</h3>
+  <ul>
+    <li>Manage Users</li>
+    <li>View Logs</li>
+    <li>System Settings</li>
+  </ul>
+
+  <p style="color:#777;">(Demo admin panel — no real data stored.)</p>
+</body>
+</html>

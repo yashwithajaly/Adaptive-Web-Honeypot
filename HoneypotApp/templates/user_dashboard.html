@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body{
+            margin:0;
+            font-family: Arial, sans-serif;
+            background:#f4f6f9;
+        }
+
+        .topbar{
+            background:#1f2937;
+            color:#fff;
+            padding:15px 25px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .topbar a{
+            color:#fff;
+            text-decoration:none;
+            margin-left:15px;
+            font-size:14px;
+        }
+
+        .container{
+            max-width:1100px;
+            margin:20px auto;
+            padding:0 15px;
+        }
+
+        .welcome{
+            background:#fff;
+            padding:18px;
+            border-radius:10px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.1);
+            margin-bottom:18px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap:15px;
+            margin-bottom:18px;
+        }
+
+        .card{
+            background:#fff;
+            padding:15px;
+            border-radius:10px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h3{
+            margin:0 0 10px;
+            font-size:16px;
+            color:#111827;
+        }
+
+        .muted{
+            color:#6b7280;
+            font-size:13px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:10px;
+        }
+
+        th, td{
+            padding:10px;
+            border:1px solid #e5e7eb;
+            text-align:left;
+            font-size:14px;
+        }
+
+        th{
+            background:#1f2937;
+            color:white;
+        }
+
+        .badge{
+            display:inline-block;
+            padding:3px 8px;
+            border-radius:12px;
+            font-size:12px;
+            color:#fff;
+        }
+
+        .badge-green{ background:#16a34a; }
+        .badge-orange{ background:#f59e0b; }
+        .badge-red{ background:#ef4444; }
+
+        .footer{
+            margin-top:20px;
+            text-align:center;
+            color:#6b7280;
+            font-size:12px;
+        }
+
+        @media (max-width:900px){
+            .grid{ grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <div><b>Secure Data Portal</b> — User Dashboard</div>
+    <div>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'fake_admin_login' %}">Admin Area</a>
+        <a href="{% url 'fake_login' %}">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome, Demo User</h2>
+        <p class="muted">Account status: <span class="badge badge-green">Active</span></p>
+        <p class="muted">Last login: Today</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Documents</h3>
+            <p><b>18</b> available</p>
+            <p class="muted">Recent updates synced successfully.</p>
+        </div>
+        <div class="card">
+            <h3>Notifications</h3>
+            <p><b>3</b> new alerts</p>
+            <p class="muted">Security alerts require attention.</p>
+        </div>
+        <div class="card">
+            <h3>Usage</h3>
+            <p><b>72%</b> monthly quota</p>
+            <p class="muted">Next reset in 9 days.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Recent Activity</h3>
+        <table>
+            <tr>
+                <th>Activity</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+            <tr>
+                <td>Downloaded monthly report</td>
+                <td><span class="badge badge-green">Success</span></td>
+                <td>Today</td>
+            </tr>
+            <tr>
+                <td>Changed account password</td>
+                <td><span class="badge badge-orange">Pending Review</span></td>
+                <td>Yesterday</td>
+            </tr>
+            <tr>
+                <td>Attempted admin access</td>
+                <td><span class="badge badge-red">Denied</span></td>
+                <td>Yesterday</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="footer">
+        User Dashboard • Secure Data Portal • Honeypot Simulation
+    </div>
+
+</div>
+
+</body>
+</html>
